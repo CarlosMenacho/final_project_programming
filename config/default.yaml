@@ -1,1 +1,48 @@
-test: 2
+# Hydra configuration for the Game of Life simulation.
+# Colourised logging provided by the hydra-colorlog plugin (requirement i).
+# ``_self_`` is listed last so the ``hydra:`` overrides below (the log-file
+# location) win over the values pulled in from the colorlog group.
+defaults:
+  - override hydra/job_logging: colorlog
+  - override hydra/hydra_logging: colorlog
+  - _self_
+
+# Board dimensions (used only when a fresh initial state is generated).
+grid:
+  rows: 40
+  cols: 40
+
+# Where the initial board is loaded from / generated to (requirement f).
+initial_state:
+  path: initial.pkl
+  # Regenerate the file automatically when it does not exist.
+  auto_generate: true
+  seed: 42
+
+simulation:
+  max_iterations: 1000
+  fps: 12                # target generations per second in the GUI
+  stability_history: 4   # detect still lifes and oscillators up to this period
+  detect_gliders: true
+
+multiprocessing:
+  workers: 8
+
+database:
+  url: sqlite:///outputs/game_of_life.db
+
+gui:
+  enabled: true
+  cell_size: 14
+
+hydra:
+  # Keep the working directory at the project root so relative paths
+  # (initial.pkl, the SQLite DB) resolve predictably.
+  job:
+    chdir: false
+  # Save the run log inside this run's own output directory instead of the
+  # project root, so every run keeps its own log alongside its .hydra config.
+  job_logging:
+    handlers:
+      file:
+        filename: ${hydra.runtime.output_dir}/${hydra.job.name}.log
