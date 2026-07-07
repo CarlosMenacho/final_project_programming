@@ -1,0 +1,6 @@
+outputs
+data.md
+__pycache__/
+*.pyc
+run_all.log
+*.db

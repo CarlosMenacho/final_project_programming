@@ -1,4 +1,7 @@
 numpy
+sqlalchemy
+dearpygui
 hydra-core
+hydra-colorlog
+typeguard
 yapf
-
